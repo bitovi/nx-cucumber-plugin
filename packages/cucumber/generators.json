@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "name": "cucumber",
+  "version": "0.0.1",
+  "generators": {
+    "cucumber": {
+      "factory": "./src/generators/cucumber/generator",
+      "schema": "./src/generators/cucumber/schema.json",
+      "description": "cucumber generator"
+    }
+  }
+}

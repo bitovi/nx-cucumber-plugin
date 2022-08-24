@@ -1,0 +1,8 @@
+{
+  "$schema": "./node_modules/nx/schemas/workspace-schema.json",
+  "version": 2,
+  "projects": {
+    "cucumber": "packages/cucumber",
+    "cucumber-e2e": "e2e/cucumber-e2e"
+  }
+}
