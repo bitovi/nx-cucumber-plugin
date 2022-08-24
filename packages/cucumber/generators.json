@@ -3,6 +3,12 @@
   "name": "cucumber",
   "version": "0.0.1",
   "generators": {
+    "init": {
+      "factory": "./src/generators/init/init#cucumberInitGenerator",
+      "schema": "./src/generators/init/schema.json",
+      "description": "Initialize the `@nrwl/cypress` plugin.",
+      "aliases": ["ng-add"]
+    },
     "cucumber": {
       "factory": "./src/generators/cucumber/generator",
       "schema": "./src/generators/cucumber/schema.json",

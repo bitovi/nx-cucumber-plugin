@@ -3,9 +3,10 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "nx serve",
-    "build": "nx build",
-    "test": "nx test"
+    "start": "nx serve cucumber",
+    "build": "nx build cucumber",
+    "test": "nx test cucumber",
+    "e2e": "nx e2e cucumber-e2e"
   },
   "private": true,
   "dependencies": {

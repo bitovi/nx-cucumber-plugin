@@ -6,6 +6,10 @@ import {
   uniq,
 } from '@nrwl/nx-plugin/testing';
 
+import {
+  cucumberVersion
+} from "../../../packages/cucumber/src/utils/versions";
+
 describe('cucumber e2e', () => {
   // Setting up individual workspaces per
   // test can cause e2e runs to take a long time.
@@ -26,9 +30,20 @@ describe('cucumber e2e', () => {
   it('should create cucumber', async () => {
     const project = uniq('cucumber');
     await runNxCommandAsync(`generate @bitovi/cucumber:cucumber ${project}`);
-    const result = await runNxCommandAsync(`build ${project}`);
-    expect(result.stdout).toContain('Executor ran');
+    const result = await runNxCommandAsync(`e2e ${project}`);
+    expect(result.stdout).toContain('Executor ran for Cucumber');
   }, 120000);
+
+  describe('--init', () => {
+    it('should install', async () => {
+      await runNxCommandAsync(
+        `generate @bitovi/cucumber:init`
+      );
+
+      const packageJson = readJson(`package.json`);
+      expect(packageJson.devDependencies["@cucumber/cucumber"]).toBe(cucumberVersion);
+    }, 120000);
+  });
 
   describe('--directory', () => {
     it('should create src in the specified directory', async () => {
@@ -37,20 +52,8 @@ describe('cucumber e2e', () => {
         `generate @bitovi/cucumber:cucumber ${project} --directory subdir`
       );
       expect(() =>
-        checkFilesExist(`libs/subdir/${project}/src/index.ts`)
+        checkFilesExist(`apps/subdir/${project}/src/index.ts`)
       ).not.toThrow();
-    }, 120000);
-  });
-
-  describe('--tags', () => {
-    it('should add tags to the project', async () => {
-      const projectName = uniq('cucumber');
-      ensureNxProject('@bitovi/cucumber', 'dist/packages/cucumber');
-      await runNxCommandAsync(
-        `generate @bitovi/cucumber:cucumber ${projectName} --tags e2etag,e2ePackage`
-      );
-      const project = readJson(`libs/${projectName}/project.json`);
-      expect(project.tags).toEqual(['e2etag', 'e2ePackage']);
     }, 120000);
   });
 });
