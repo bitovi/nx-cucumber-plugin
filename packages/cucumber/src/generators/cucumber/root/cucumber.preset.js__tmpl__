@@ -1,0 +1,7 @@
+module.exports = {
+  default: {
+    parallel: 1,
+    requireModule: ['ts-node/register'],
+    publishQuiet: true
+  },
+};

@@ -1,0 +1,17 @@
+// TODO: make this work based on path
+const preset = require('../../cucumber.preset');
+
+module.exports = {
+  default: {
+    ...preset.default,
+    // format: [
+    //    'html:dist/cucumber/<%= projectName %>/cucumber-report.html'
+    // ],
+    paths: [
+        '<%= featuresDirectory %>',
+    ],
+    require: [
+      '<%= stepDefinitionsDirectory %>',
+    ]
+  },
+};

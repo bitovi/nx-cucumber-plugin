@@ -5,4 +5,5 @@ export interface CucumberGeneratorSchema {
   name: string;
   project?: string;
   directory?: string;
+  baseUrl?: string;
 }

@@ -1,0 +1,16 @@
+import { Given, When, Then } from '@cucumber/cucumber';
+// TODO: install an assertion library such as assert, jest, or playwright
+// Example: https://github.com/cucumber/cucumber-js/blob/main/docs/support_files/step_definitions.md#regular-expressions
+
+Given(/^the project name is (.*)$/, function (projectName) {
+  console.log(`TODO: expect(projectName).toBe('<%= projectName %>')`, projectName);
+});
+
+When(/^testing <%= projectName %> using (.*)$/, function (testingTool) {
+  console.log(`TODO: expect(testingTool).toBe('Cucumber')`, testingTool);
+});
+
+Then(/^(.*) is tested with (.*)$/, function (projectName, testingTool) {
+  console.log(`TODO: expect(projectName).toBe('<%= projectName %>')`, projectName);
+  console.log(`TODO: expect(testingTool).toBe('Cucumber')`, testingTool);
+});

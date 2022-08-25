@@ -1,0 +1,5 @@
+Feature: As a developer I expect to write e2e tests
+  Scenario: Performance e2e tests for <%= projectName %> using Cucumber
+    Given the project name is <%= projectName %>
+    When testing <%= projectName %> using Cucumber
+    Then <%= projectName %> is tested with Cucumber

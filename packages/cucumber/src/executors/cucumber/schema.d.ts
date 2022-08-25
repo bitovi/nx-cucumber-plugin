@@ -1,1 +1,4 @@
-export interface CucumberExecutorSchema {} // eslint-disable-line
+export interface CucumberExecutorSchema {
+    watch?: boolean;
+    watchAll?: boolean;
+} // eslint-disable-line

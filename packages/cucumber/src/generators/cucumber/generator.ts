@@ -4,8 +4,10 @@ import {
   generateFiles,
   getWorkspaceLayout,
   joinPathFragments,
+  logger,
   names,
   offsetFromRoot,
+  readProjectConfiguration,
   Tree,
 } from '@nrwl/devkit';
 import * as path from 'path';
@@ -15,6 +17,10 @@ import { CucumberGeneratorSchema } from './schema';
 interface NormalizedSchema extends CucumberGeneratorSchema {
   projectName: string;
   projectRoot: string;
+  projectOffsetFromRoot: string;
+  featuresDirectory: string;
+  stepDefinitionsDirectory: string;
+  configDirectory: string;
 }
 
 function normalizeOptions(
@@ -41,11 +47,19 @@ function normalizeOptions(
     : name;
   const projectName = projectDirectory.replace(new RegExp('/', 'g'), '-');
   const projectRoot = `${getWorkspaceLayout(tree).appsDir}/${projectDirectory}`;
+  const projectOffsetFromRoot = offsetFromRoot(projectRoot);
+  const featuresDirectory = path.join(projectRoot, '/src/features/**/*.feature');
+  const stepDefinitionsDirectory = path.join(projectRoot, '/src/step-definitions/**/*.ts');
+  const configDirectory = path.join(projectRoot, '/cucumber.js');
 
   return {
     ...options,
     projectName,
     projectRoot,
+    projectOffsetFromRoot,
+    featuresDirectory,
+    stepDefinitionsDirectory,
+    configDirectory
   };
 }
 
@@ -53,9 +67,15 @@ function addFiles(tree: Tree, options: NormalizedSchema) {
   const templateOptions = {
     ...options,
     ...names(options.name),
-    offsetFromRoot: offsetFromRoot(options.projectRoot),
+    offsetFromRoot: options.projectOffsetFromRoot,
     template: '',
+    tmpl: ''
   };
+
+  if (!tree.exists('cucumber.preset.js')) {
+    createCucumberPreset(tree, options);
+  }
+
   generateFiles(
     tree,
     path.join(__dirname, 'files'),
@@ -64,20 +84,77 @@ function addFiles(tree: Tree, options: NormalizedSchema) {
   );
 }
 
+function createCucumberPreset(tree: Tree, options: NormalizedSchema): void {
+  const templateOptions = {
+    ...options,
+    ...names(options.name),
+    offsetFromRoot: '',
+    template: '',
+    tmpl: ''
+  };
+
+  generateFiles(
+    tree,
+    path.join(__dirname, 'root'),
+    '',
+    templateOptions
+  );
+}
+
+function getDevServerTarget(tree: Tree, options: CucumberGeneratorSchema): string {
+  const project = readProjectConfiguration(tree, options.project);
+
+  if (project.targets?.serve && project.targets?.serve?.defaultConfiguration) {
+    return `${options.project}:serve:${project.targets.serve.defaultConfiguration}`;
+  }
+
+  return `${options.project}:serve`;
+}
+
+function getE2eTargetConfiguration(tree: Tree, options: NormalizedSchema) {
+  const normalizedOptions = normalizeOptions(tree, options);
+
+  const e2eConfiguration = {
+    executor: '@bitovi/cucumber:cucumber',
+    options: {
+      config: normalizedOptions.configDirectory,
+      baseUrl: undefined,
+      devServerTarget: undefined,
+    }
+  };
+
+  if (options.baseUrl) {
+    e2eConfiguration.options.baseUrl = options.baseUrl;
+
+    return e2eConfiguration;
+  }
+
+  if (options.project) {
+    e2eConfiguration.options.devServerTarget = getDevServerTarget(tree, options);
+
+    return e2eConfiguration;
+  }
+
+  logger.warn('Either project or baseUrl should be specified');
+
+  return e2eConfiguration;
+}
+
 export default async function (tree: Tree, options: CucumberGeneratorSchema) {
   const normalizedOptions = normalizeOptions(tree, options);
+
   addProjectConfiguration(tree, normalizedOptions.projectName, {
     root: normalizedOptions.projectRoot,
     projectType: 'application',
     sourceRoot: `${normalizedOptions.projectRoot}/src`,
     targets: {
-      e2e: {
-        executor: '@bitovi/cucumber:cucumber',
-      },
+      e2e: getE2eTargetConfiguration(tree, normalizedOptions),
     },
     tags: [],
     implicitDependencies: options.project ? [options.project] : undefined,
   });
+
   addFiles(tree, normalizedOptions);
+
   await formatFiles(tree);
 }

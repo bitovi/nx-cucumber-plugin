@@ -19,7 +19,7 @@ function updateDependencies(host: Tree) {
     {},
     {
       ['@bitovi/cucumber']: nxVersion,
-      ['@cucumber/cucumber']: cucumberVersion,
+      ['@cucumber/cucumber']: cucumberVersion
     }
   );
 }
