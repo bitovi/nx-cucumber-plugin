@@ -4,10 +4,6 @@
 
 import { names } from '@nrwl/devkit';
 
-export function getUnscopedLibName(libRoot: string): string {
-  return libRoot.slice(libRoot.lastIndexOf('/') + 1);
-}
-
 export function filePathPrefix(directory: string): string {
   return `${names(directory).fileName}`.replace(new RegExp('/', 'g'), '-');
 }

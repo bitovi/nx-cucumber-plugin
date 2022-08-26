@@ -8,8 +8,9 @@
     "lint": "npm run format",
     "start": "nx serve cucumber",
     "build": "nx build cucumber",
-    "test": "nx test cucumber",
-    "e2e": "nx e2e cucumber-e2e"
+    "jest": "nx test cucumber && ts-node -T jest-coverage-shield/index.ts",
+    "e2e": "nx e2e cucumber-e2e",
+    "test": "npm run jest && npm run e2e"
   },
   "private": true,
   "dependencies": {
@@ -31,12 +32,14 @@
     "@swc-node/register": "^1.4.2",
     "@swc/cli": "~0.1.55",
     "@swc/core": "^1.2.173",
+    "@types/fs-extra": "^9.0.13",
     "@types/jest": "27.4.1",
     "@types/node": "16.11.7",
     "@typescript-eslint/eslint-plugin": "^5.29.0",
     "@typescript-eslint/parser": "^5.29.0",
     "eslint": "~8.15.0",
     "eslint-config-prettier": "8.1.0",
+    "fs-extra": "^10.1.0",
     "husky": "^8.0.1",
     "jest": "27.5.1",
     "jsonc-eslint-parser": "^2.1.0",
