@@ -17,23 +17,21 @@ describe('init', () => {
 
   it('should add dependencies into `package.json` file', async () => {
     expect(true).toBeTruthy();
-    // const existing = 'existing';
-    // const existingVersion = '1.0.0';
-    // updateJson(tree, 'package.json', (json) => {
-    //   json.dependencies['@nrwl/cypress'] = cypressVersion;
+    const existing = 'existing';
+    const existingVersion = '1.0.0';
+    updateJson(tree, 'package.json', (json) => {
+      json.dependencies['@cucumber/cucumber'] = cucumberVersion;
 
-    //   json.dependencies[existing] = existingVersion;
-    //   json.devDependencies[existing] = existingVersion;
-    //   return json;
-    // });
-    // cypressInitGenerator(tree, {});
-    // const packageJson = readJson(tree, 'package.json');
+      json.dependencies[existing] = existingVersion;
+      json.devDependencies[existing] = existingVersion;
+      return json;
+    });
+    cucumberInitGenerator(tree, {});
+    const packageJson = readJson(tree, 'package.json');
 
-    // expect(packageJson.devDependencies.cypress).toBeDefined();
-    // expect(packageJson.devDependencies['@nrwl/cypress']).toBeDefined();
-    // expect(packageJson.devDependencies['@types/node']).toBeDefined();
-    // expect(packageJson.devDependencies[existing]).toBeDefined();
-    // expect(packageJson.dependencies['@nrwl/cypress']).toBeUndefined();
-    // expect(packageJson.dependencies[existing]).toBeDefined();
+    expect(packageJson.devDependencies['@cucumber/cucumber']).toBeDefined();
+    expect(packageJson.devDependencies[existing]).toBeDefined();
+    expect(packageJson.dependencies['@cucumber/cucumber']).toBeUndefined();
+    expect(packageJson.dependencies[existing]).toBeDefined();
   });
 });

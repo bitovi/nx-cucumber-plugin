@@ -3,5 +3,5 @@
  */
 
 export interface Schema {
-    skipPackageJson?: boolean;
+  skipPackageJson?: boolean;
 }

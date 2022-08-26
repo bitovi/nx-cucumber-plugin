@@ -7,15 +7,15 @@ import {
   uniq,
 } from '@nrwl/nx-plugin/testing';
 
-import {
-  cucumberVersion
-} from "../../../packages/cucumber/src/utils/versions";
+import { cucumberVersion } from '../../../packages/cucumber/src/utils/versions';
 
 const TIMEOUT = 120000;
 
 const createAngularProject = async (project: string) => {
-  await runNxCommandAsync(`generate @nrwl/angular:app ${project} --e2eTestRunner none --unitTestRunner none --skipTests true`);
-}
+  await runNxCommandAsync(
+    `generate @nrwl/angular:app ${project} --e2eTestRunner none --unitTestRunner none --skipTests true`
+  );
+};
 
 describe('cucumber e2e', () => {
   // Setting up individual workspaces per
@@ -29,9 +29,7 @@ describe('cucumber e2e', () => {
 
     // await runCommandAsync(`npm install -D @nrwl/angular`);
 
-    await runNxCommandAsync(
-      `generate @bitovi/cucumber:init`
-    );
+    await runNxCommandAsync(`generate @bitovi/cucumber:init`);
   }, TIMEOUT);
 
   afterAll(() => {
@@ -41,54 +39,76 @@ describe('cucumber e2e', () => {
   });
 
   describe('--init', () => {
-    it('should install @cucumber/cucumber', async () => {
-      // await runNxCommandAsync(
-      //   `generate @bitovi/cucumber:init`
-      // );
+    it(
+      'should install @cucumber/cucumber',
+      async () => {
+        // await runNxCommandAsync(
+        //   `generate @bitovi/cucumber:init`
+        // );
 
-      const packageJson = readJson(`package.json`);
+        const packageJson = readJson(`package.json`);
 
-      expect(packageJson.devDependencies["@cucumber/cucumber"]).toBe(cucumberVersion);
-    }, TIMEOUT);
+        expect(packageJson.devDependencies['@cucumber/cucumber']).toBe(
+          cucumberVersion
+        );
+      },
+      TIMEOUT
+    );
   });
 
   describe('default', () => {
-    it('should create cucumber application', async () => {
-      const project = uniq('cucumber');
-  
-      await runNxCommandAsync(`generate @bitovi/cucumber:cucumber ${project}-alone`);
-  
-      const result = await runNxCommandAsync(`e2e ${project}-alone`);
-  
-      expect(result.stdout).toContain('Executor ran for Cucumber');
-    }, TIMEOUT);
+    it(
+      'should create cucumber application',
+      async () => {
+        const project = uniq('cucumber');
+
+        await runNxCommandAsync(
+          `generate @bitovi/cucumber:cucumber ${project}-alone`
+        );
+
+        const result = await runNxCommandAsync(`e2e ${project}-alone`);
+
+        expect(result.stdout).toContain('Executor ran for Cucumber');
+      },
+      TIMEOUT
+    );
   });
 
   describe('--project', () => {
-    it('should be usable with some (Angular) project', async () => {
-      const project = 'moo';
-  
-      await createAngularProject(project);
-  
-      await runNxCommandAsync(`generate @bitovi/cucumber:cucumber ${project}-e2e --project ${project}`);
-  
-      const result = await runNxCommandAsync(`e2e ${project}-e2e`);
-  
-      expect(result.stdout).toContain('Executor ran for Cucumber');
-    }, TIMEOUT * 2);
+    it(
+      'should be usable with some (Angular) project',
+      async () => {
+        const project = 'moo';
+
+        await createAngularProject(project);
+
+        await runNxCommandAsync(
+          `generate @bitovi/cucumber:cucumber ${project}-e2e --project ${project}`
+        );
+
+        const result = await runNxCommandAsync(`e2e ${project}-e2e`);
+
+        expect(result.stdout).toContain('Executor ran for Cucumber');
+      },
+      TIMEOUT * 2
+    );
   });
 
   describe('--directory', () => {
-    it('should create src in the specified directory', async () => {
-      const project = uniq('cucumber');
+    it(
+      'should create src in the specified directory',
+      async () => {
+        const project = uniq('cucumber');
 
-      await runNxCommandAsync(
-        `generate @bitovi/cucumber:cucumber ${project} --directory subdir`
-      );
+        await runNxCommandAsync(
+          `generate @bitovi/cucumber:cucumber ${project} --directory subdir`
+        );
 
-      expect(() =>
-        checkFilesExist(`apps/subdir/${project}/src/features`)
-      ).not.toThrow();
-    }, TIMEOUT);
+        expect(() =>
+          checkFilesExist(`apps/subdir/${project}/src/features`)
+        ).not.toThrow();
+      },
+      TIMEOUT
+    );
   });
 });

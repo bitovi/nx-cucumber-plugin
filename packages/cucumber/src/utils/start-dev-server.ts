@@ -3,7 +3,7 @@
  */
 
 import { ExecutorContext, runExecutor } from '@nrwl/devkit';
-import { CucumberExecutorOptions } from '../executors/cucumber/executor';
+import { CucumberExecutorSchema } from '../executors/cucumber/schema';
 
 interface ExecutorResult {
   success: boolean;
@@ -11,8 +11,8 @@ interface ExecutorResult {
 }
 
 export async function* startDevServer(
-  opts: CucumberExecutorOptions,
-  context: ExecutorContext,
+  opts: CucumberExecutorSchema,
+  context: ExecutorContext
 ) {
   const watch = opts.watch || opts.watchAll;
 
@@ -27,7 +27,7 @@ export async function* startDevServer(
   for await (const output of await runExecutor<ExecutorResult>(
     { project, target, configuration },
     watch ? { watch } : {},
-    context,
+    context
   )) {
     if (!output.success && !watch) {
       throw new Error('Could not compile application files');

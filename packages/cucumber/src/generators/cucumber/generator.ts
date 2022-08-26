@@ -21,6 +21,7 @@ interface NormalizedSchema extends CucumberGeneratorSchema {
   featuresDirectory: string;
   stepDefinitionsDirectory: string;
   configDirectory: string;
+  tsconfigDirectory: string;
 }
 
 function normalizeOptions(
@@ -48,9 +49,16 @@ function normalizeOptions(
   const projectName = projectDirectory.replace(new RegExp('/', 'g'), '-');
   const projectRoot = `${getWorkspaceLayout(tree).appsDir}/${projectDirectory}`;
   const projectOffsetFromRoot = offsetFromRoot(projectRoot);
-  const featuresDirectory = path.join(projectRoot, '/src/features/**/*.feature');
-  const stepDefinitionsDirectory = path.join(projectRoot, '/src/step-definitions/**/*.ts');
+  const featuresDirectory = path.join(
+    projectRoot,
+    '/src/features/**/*.feature'
+  );
+  const stepDefinitionsDirectory = path.join(
+    projectRoot,
+    '/src/step-definitions/**/*.ts'
+  );
   const configDirectory = path.join(projectRoot, '/cucumber.js');
+  const tsconfigDirectory = path.join(projectRoot, '/tsconfig.json');
 
   return {
     ...options,
@@ -59,7 +67,8 @@ function normalizeOptions(
     projectOffsetFromRoot,
     featuresDirectory,
     stepDefinitionsDirectory,
-    configDirectory
+    configDirectory,
+    tsconfigDirectory,
   };
 }
 
@@ -69,7 +78,7 @@ function addFiles(tree: Tree, options: NormalizedSchema) {
     ...names(options.name),
     offsetFromRoot: options.projectOffsetFromRoot,
     template: '',
-    tmpl: ''
+    tmpl: '',
   };
 
   if (!tree.exists('cucumber.preset.js')) {
@@ -90,18 +99,16 @@ function createCucumberPreset(tree: Tree, options: NormalizedSchema): void {
     ...names(options.name),
     offsetFromRoot: '',
     template: '',
-    tmpl: ''
+    tmpl: '',
   };
 
-  generateFiles(
-    tree,
-    path.join(__dirname, 'root'),
-    '',
-    templateOptions
-  );
+  generateFiles(tree, path.join(__dirname, 'root'), '', templateOptions);
 }
 
-function getDevServerTarget(tree: Tree, options: CucumberGeneratorSchema): string {
+function getDevServerTarget(
+  tree: Tree,
+  options: CucumberGeneratorSchema
+): string {
   const project = readProjectConfiguration(tree, options.project);
 
   if (project.targets?.serve && project.targets?.serve?.defaultConfiguration) {
@@ -118,9 +125,10 @@ function getE2eTargetConfiguration(tree: Tree, options: NormalizedSchema) {
     executor: '@bitovi/cucumber:cucumber',
     options: {
       config: normalizedOptions.configDirectory,
+      tsconfig: normalizedOptions.tsconfigDirectory,
       baseUrl: undefined,
       devServerTarget: undefined,
-    }
+    },
   };
 
   if (options.baseUrl) {
@@ -130,7 +138,10 @@ function getE2eTargetConfiguration(tree: Tree, options: NormalizedSchema) {
   }
 
   if (options.project) {
-    e2eConfiguration.options.devServerTarget = getDevServerTarget(tree, options);
+    e2eConfiguration.options.devServerTarget = getDevServerTarget(
+      tree,
+      options
+    );
 
     return e2eConfiguration;
   }
