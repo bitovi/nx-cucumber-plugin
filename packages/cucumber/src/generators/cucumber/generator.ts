@@ -36,20 +36,7 @@ function normalizeOptions(
   tree: Tree,
   options: CucumberGeneratorSchema
 ): NormalizedSchema {
-  // const { appsDir } = getWorkspaceLayout(tree);
   const name = names(options.name).fileName;
-
-  // const projectName = filePathPrefix(
-  //   options.directory ? `${options.directory}-${options.name}` : options.name
-  // );
-
-  // const projectRoot = options.directory
-  //   ? joinPathFragments(
-  //       appsDir,
-  //       names(options.directory).fileName,
-  //       options.name
-  //     )
-  //   : joinPathFragments(appsDir, options.name);
 
   const projectDirectory = options.directory
     ? `${names(options.directory).fileName}/${name}`
