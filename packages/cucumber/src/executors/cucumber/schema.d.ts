@@ -6,4 +6,5 @@ export interface CucumberExecutorSchema {
   config?: string;
   tsconfig?: string;
   env?: ProcessEnv;
+  args?: string[];
 } // eslint-disable-line

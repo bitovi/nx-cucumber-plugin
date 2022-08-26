@@ -3,7 +3,6 @@ import {
   formatFiles,
   generateFiles,
   getWorkspaceLayout,
-  joinPathFragments,
   logger,
   names,
   offsetFromRoot,
@@ -11,7 +10,6 @@ import {
   Tree,
 } from '@nrwl/devkit';
 import * as path from 'path';
-import { filePathPrefix } from '../../utils/project-name';
 import { CucumberGeneratorSchema } from './schema';
 
 interface NormalizedSchema extends CucumberGeneratorSchema {
@@ -22,6 +20,16 @@ interface NormalizedSchema extends CucumberGeneratorSchema {
   stepDefinitionsDirectory: string;
   configDirectory: string;
   tsconfigDirectory: string;
+}
+
+interface E2eConfiguration {
+  executor: string;
+  options: {
+    config?: string;
+    tsconfig?: string;
+    baseUrl?: string;
+    devServerTarget?: string;
+  };
 }
 
 function normalizeOptions(
@@ -105,29 +113,24 @@ function createCucumberPreset(tree: Tree, options: NormalizedSchema): void {
   generateFiles(tree, path.join(__dirname, 'root'), '', templateOptions);
 }
 
-function getDevServerTarget(
-  tree: Tree,
-  options: CucumberGeneratorSchema
-): string {
-  const project = readProjectConfiguration(tree, options.project);
+function getDevServerTarget(tree: Tree, projectName: string): string {
+  const project = readProjectConfiguration(tree, projectName);
 
   if (project.targets?.serve && project.targets?.serve?.defaultConfiguration) {
-    return `${options.project}:serve:${project.targets.serve.defaultConfiguration}`;
+    return `${projectName}:serve:${project.targets.serve.defaultConfiguration}`;
   }
 
-  return `${options.project}:serve`;
+  return `${projectName}:serve`;
 }
 
 function getE2eTargetConfiguration(tree: Tree, options: NormalizedSchema) {
   const normalizedOptions = normalizeOptions(tree, options);
 
-  const e2eConfiguration = {
+  const e2eConfiguration: E2eConfiguration = {
     executor: '@bitovi/cucumber:cucumber',
     options: {
       config: normalizedOptions.configDirectory,
       tsconfig: normalizedOptions.tsconfigDirectory,
-      baseUrl: undefined,
-      devServerTarget: undefined,
     },
   };
 
@@ -140,7 +143,7 @@ function getE2eTargetConfiguration(tree: Tree, options: NormalizedSchema) {
   if (options.project) {
     e2eConfiguration.options.devServerTarget = getDevServerTarget(
       tree,
-      options
+      options.project
     );
 
     return e2eConfiguration;

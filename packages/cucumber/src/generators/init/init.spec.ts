@@ -16,21 +16,31 @@ describe('init', () => {
   });
 
   it('should add dependencies into `package.json` file', async () => {
-    expect(true).toBeTruthy();
+    // Placeholder dependency name
     const existing = 'existing';
+    // Placeholder dependency version
     const existingVersion = '1.0.0';
+
     updateJson(tree, 'package.json', (json) => {
       json.dependencies['@cucumber/cucumber'] = cucumberVersion;
 
+      // Ensure that dependencies and DevDependencies exist
       json.dependencies[existing] = existingVersion;
       json.devDependencies[existing] = existingVersion;
       return json;
     });
+
     cucumberInitGenerator(tree, {});
+
     const packageJson = readJson(tree, 'package.json');
 
+    // Check devDependencies
+    expect(packageJson.devDependencies['@bitovi/cucumber']).toBeDefined();
     expect(packageJson.devDependencies['@cucumber/cucumber']).toBeDefined();
     expect(packageJson.devDependencies[existing]).toBeDefined();
+
+    // Check dependencies
+    expect(packageJson.dependencies['@bitovi/cucumber']).toBeUndefined();
     expect(packageJson.dependencies['@cucumber/cucumber']).toBeUndefined();
     expect(packageJson.dependencies[existing]).toBeDefined();
   });

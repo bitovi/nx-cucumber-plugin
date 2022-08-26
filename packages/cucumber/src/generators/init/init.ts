@@ -12,7 +12,11 @@ import { cucumberVersion, nxVersion } from '../../utils/versions';
 import { Schema } from './schema';
 
 function updateDependencies(host: Tree) {
-  removeDependenciesFromPackageJson(host, ['@bitovi/cucumber'], []);
+  removeDependenciesFromPackageJson(
+    host,
+    ['@bitovi/cucumber', '@cucumber/cucumber'],
+    []
+  );
 
   return addDependenciesToPackageJson(
     host,
