@@ -1,0 +1,24 @@
+// Hooks are used for setup and teardown the environment before and after each scenario. 
+// See the API reference for the specification of the first argument passed to hooks.
+// https://github.com/cucumber/cucumber-js/blob/main/docs/support_files/api_reference.md 
+
+import {BeforeAll, Before, After, AfterAll} from '@cucumber/cucumber';
+
+BeforeAll(async () => {
+    // Defines a hook which is run before all scenarios.
+    // Multiple BeforeAll hooks are executed in the order that they are defined.
+});
+
+AfterAll(async () => {
+    // Defines a hook which is run after all scenarios have completed.
+    // Multiple AfterAll hooks are executed in the reverse order that they are defined.
+});
+
+Before(async () => {
+    // Defines a hook which is run before each scenario.
+    // Multiple Before hooks are executed in the order that they were defined. 
+});
+
+After(async () => {
+    // Defines a hook which is run after each scenario.
+});
