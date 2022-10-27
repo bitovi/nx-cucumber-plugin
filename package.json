@@ -18,6 +18,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^14.1.3",
+    "@bitovi/eslint-config": "^1.4.1",
     "@cucumber/cucumber": "^8.5.1",
     "@nrwl/angular": "^14.5.10",
     "@nrwl/cli": "14.5.10",

@@ -23,12 +23,20 @@
     },
     {
       "files": ["*.ts", "*.tsx"],
-      "extends": ["plugin:@nrwl/nx/typescript"],
+      "extends": [
+        "plugin:@nrwl/nx/typescript",
+        "@bitovi/eslint-config/rules/typescript"
+      ],
       "rules": {}
     },
     {
       "files": ["*.js", "*.jsx"],
       "extends": ["plugin:@nrwl/nx/javascript"],
+      "rules": {}
+    },
+    {
+      "files": ["*.test.ts", "*.spec.ts", "*.test.js", "*.spec.js"],
+      "extends": ["@bitovi/eslint-config/rules/rxjs"],
       "rules": {}
     },
     {
